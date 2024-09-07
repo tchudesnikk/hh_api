@@ -70,7 +70,7 @@ class GetVacations(ConnectorHH):
         return self.path_request
 
     @classmethod
-    def create_new_class(cls, keyword):
+    def create_new_class(cls):
         return cls()
 
     def load_info(self):
