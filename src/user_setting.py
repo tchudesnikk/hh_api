@@ -7,17 +7,26 @@ class UserSetting:
 
     __solid__ = ('search_query', 'top_n', 'salary_min', 'salary_max', 'keywords', 'area')
 
-    def __init__(self):
-        self.__search_query = ''
-        self.__top_n = 0
+    def __init__(self, search_query):
+        self.__search_query = search_query
+        self.__top_n = 10
+        self.__salary = {'salary_min': 0, 'salary_max': 0}
         self.__salary_min = 0
         self.__salary_max = 0
         self.__keywords = []
         self.__area = ''
 
     @classmethod
-    def create_new_object(cls):
-        return cls()
+    def create_new_object(cls, search_query):
+        return cls(search_query)
+
+    @staticmethod
+    def check_for_number(user_value) -> int:
+        try:
+            value = int(user_value)
+        except ValueError:
+            value = 0
+        return value
 
     @property
     def search_query(self):
@@ -28,28 +37,26 @@ class UserSetting:
         self.__search_query = search_query
 
     @property
-    def __top_n(self):
-        return self.__search_query
+    def top_n(self):
+        return self.__top_n
 
-    @__top_n.setter
-    def __top_n(self, top_n):
+    @top_n.setter
+    def top_n(self, top_n):
         self.__top_n = top_n
 
     @property
-    def salary_min(self):
-        return self.__salary_min
+    def salary(self):
+        return self.__salary
 
-    @salary_min.setter
-    def salary_min(self, salary_min):
-        self.__salary_min = salary_min
-
-    @property
-    def salary_max(self):
-        return self.__salary_max
-
-    @salary_max.setter
-    def salary_max(self, salary_max):
-        self.__salary_max = salary_max
+    @salary.setter
+    def salary(self, salary_range: str):
+        if salary_range.strip() == '':
+            self.__salary['salary_min'] = 0
+            self.__salary['salary_max'] = 0
+        else:
+            salary = salary_range.split(' ')
+            self.__salary['salary_min'] = self.check_for_number(salary[0])
+            self.__salary['salary_max'] = self.check_for_number(salary[1])
 
     @property
     def keywords(self):
@@ -57,7 +64,7 @@ class UserSetting:
 
     @keywords.setter
     def keywords(self, keyword):
-        self.__keywords.append(keyword)
+        self.__keywords.extend(keyword)
 
     @keywords.deleter
     def keywords(self):
